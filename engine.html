@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Simple Search Engine</title>
+        <meta http-equiv="Content-Type" content="text/html"; charset="UTF-8">
+    </head>
+    <body>
+        <?php if (isset($_GET['form_submitted'])): ?>
+        <h2>Search Results For <?php echo $_GET['search_term']; ?> </h2>
+        <?php if ($_GET['search_term']=="GET"): ?>
+        <p>The GET method displayed its values in the URL</p>
+        <?php else: ?>
+        <p>Sorry,no matches found for your search term</p>
+        <?php endif; ?>
+        <p>Go <a href="/search_engine"</p>
+    </body>
+</html>

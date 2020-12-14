@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payments</title>
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/grid.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+</head>
+
+<body>
+<!--Navigation Bar-->
+<div id="header"></div>
+
+<div class="main-container evade-nav div-fill">
+  <div class="center-wrapper">
+    <div class="row-container flex-center">
+      <div class="column-container section-container">
+        <div class="section-small">
+          <h2>Payments</h2>
+          <span class="sub-head" style="font-size:1.6rem">Please enter your Credit/Debit card Details</span>
+        </div>
+        <h4 id="price" style="text-transform:none">Your Total is Rs.</h4>
+        <div class="section">
+          <form>
+            <div class="form-container">
+              <p>Name on the card: </p><input class="form-input form-forum" type="text" name="cName" required>
+              <p>Card Number: </p><input class="form-input form-forum" type="text" name="cNum" placeholder="0000 00000 00000 00000" required>
+              <span style="font-size:4rem"><i class="fab fa-cc-visa"></i> <i class="fab fa-cc-mastercard"></i> <i class="fab fa-cc-amex"></i> <i class="fab fa-cc-jcb"></i> <i class="fab fa-cc-discover"></i></span>
+              <p>Expire Date (MM YYYY): </p>
+              <input class="form-input form-forum form-small" type="text" name="cMM" placeholder="MM" style="margin-right:2rem;display: inline-block;" required>
+              <input class="form-input form-forum form-small" type="text" name="cYYYY" placeholder="YYYY" style="display: inline-block;" required>
+              <p>CVC/CVV: </p><input class="form-input form-forum  form-small" type="text" name="cCVV" placeholder="3 or 4 Digits Number" required>
+              <button class="form-button button-black" name="lSubmit">Buy</button>
+              <a href="shop.html" class="form-button button-black" name="lSubmit"><i class="fas fa-shopping-cart"></i> Continue Shopping</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Footer-->
+<div id="footer"></div>
+   
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/common.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#price').append(n2comm($.urlParam('sum')));
+  });
+</script>
+</body>
+</html>

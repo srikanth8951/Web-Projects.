@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopping Cart</title>
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/grid.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+</head>
+
+<body>
+<!--Navigation Bar-->
+<div id="header"></div>
+
+<div class="main-container evade-nav div-fill">
+  <div class="center-wrapper">
+    <div class="column-container">
+      <h1>Shopping Cart</h1>
+      <div class="section popup-noitem div-center" style="margin-bottom: 10rem;" id="noItemDes">
+        <p>There are no items in the cart yet!</p>
+        <a href="./shop.html">Shop Now</a>
+      </div>
+      <div class="row-container flex-center-row hide-container" id="cart-container">
+        <div class="col-9">
+          <table class="items-table" id="iCart"></table>
+        </div>
+        <div class="col-3">
+          <div class="container" style="border-left: .1rem solid rgba(1,1,1,0.3)">
+          <h2 class="section-small">Total</h2>
+          <div class="section-small">
+            <p id="iCount"><span class="span-heading">No of items : </span></p>
+            <p id="iSum"><span class="span-heading">Total : </span>Rs.</p>
+            <p><span class="span-heading">Discount : </span>-</p>
+            <p id="iSum2"><span class="span-heading">Total Price : </span>Rs.</p>
+          </div>
+          <a href="#" id="iPro" class="button-black" style="padding:1rem; font-size:1.5rem">Proceed</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+   
+<!--Footer-->
+<div id="footer"></div>
+   
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/cart_handle.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cart = getAllItems();
+
+    if(cart && cart.length != 0){
+      var i, sum, price, qty;
+
+      sum = 0;
+      addTableAndHideMsg();
+
+      for(i=0; i < cart.length; i++){
+        price = parseInt(cart[i]["price"]);
+        qty = parseInt(cart[i]["qty"]);
+        sum += price * qty;
+
+        addItemTr(i, cart[i]["id"], qty);
+      }
+
+      $("#iSum").append(n2comm(sum));
+      $("#iSum2").append(n2comm(sum));
+      $("#iPro").attr("href","shipping.html?sum="+sum);
+      $("#iCount").append(i);
+    }
+  });
+
+  function addTableAndHideMsg(){
+    $("#cart-container").removeClass("hide-container");
+    $("#noItemDes").css("display","none");
+  }
+
+  function addItemTr(index, id, qty){
+    $.ajax({
+      type: "GET" ,
+      url: "xml/items.xml" ,
+      dataType: "xml" ,
+      success: function(xml) {
+        var elem = $(xml).find('items item[id="'+id+'"]');
+
+        var price = parseInt($(elem).children('price').text());
+        var tot = price * qty;
+        var html =       
+        '<tr>'+
+          '<td>'+
+            '<div class="row-container flex-start">'+
+              '<a href="product.html?id='+id+'"><img src="images/items/item_'+id+'.jpg"></a>'+
+              '<div class="description">'+
+                '<h4 class="section-small">'+$(elem).children('brand').text()+' <span class="sub-head">'+$(elem).children('model').text()+'</span></h4>'+
+                '<p><b>Price: </b>Rs.'+n2comm(price)+'</p>'+
+                '<p><b>Quantity: </b>'+qty+'</p>'+
+              '</div>'+
+            '</div>'+
+          '</td>'+
+          '<td class="align-center"><h3 class="no-upper">Rs. '+n2comm(tot)+'</h3></td>'+
+          '<td class="align-center"><button onclick="removeItemRld('+index+')"><i class="fas fa-times-circle"></i></button></td>'+
+        '</tr>';
+        
+        $("#iCart").append(html+'\n');         
+      }       
+    });
+  }
+
+  function removeItemRld(id){
+    removeCartItem(id);
+    location.reload();
+  }
+</script>
+</body>
+</html>

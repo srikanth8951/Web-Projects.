@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop</title>
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/grid.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+</head>
+
+<body>
+<!--Navigation Bar-->
+<div id="header"></div>
+
+<div class="main-container evade-nav">
+  <div class="category-nav" id="categoryNav">
+    <div class="container">
+      <h4 class="section-small">Categories</h4>
+      <div id="catUrls" class="section-small" style="border-bottom: .1rem solid rgba(1,1,1,0.3); padding-bottom:2rem;">
+        <p><a href="shop.html?cat=1" id="cat1">Frames</a></p>
+        <p><a href="shop.html?cat=2" id="cat2">Sunglasses</a></p>
+        <p><a href="shop.html?cat=3" id="cat3">Accessories</a></p>
+      </div>
+      <h4 class="section-small">Search by</h4>
+      <div class="section-small">
+        <h5 class="sub-head">Gender</h5>
+        <p><label><input type="radio" name="iGend" value="3"> All</label></p>
+        <p><label><input type="radio" name="iGend" value="1"> Male</label></p>
+        <p><label><input type="radio" name="iGend" value="2"> Female</label></p>
+      </div>
+      <div class="section-small">
+        <h5 class="sub-head">Price Range</h5>
+        <p>Min <input type="text" name="iPriceMin" class="minMaxText"> - Max <input type="text" name="iPriceMax" class="minMaxText"></p>
+      </div>
+      <div class="section-last">
+        <button class="button-black" style="padding:1rem" onclick="searchItems()">Search</button>
+        <a class="button-black" style="padding:1rem;font-size: 1.4rem;" href="" id="sReset">Reset</a>
+      </div>
+    </div>
+  </div>
+  <div class="items-container">
+  <div class="container div-center">
+    <h1 style="margin-left:2rem" id="contents-heading">Heading</h1>
+    <div class="row-container" id="contents" style=""></div>
+  </div>
+
+  <!--Footer-->
+  
+  </div>
+</div>
+
+<div id="footer"></div>
+   
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/cart_handle.js"></script>
+<script type="text/javascript">
+  var category = parseInt($.urlParam('cat'));
+  var type = parseInt($.urlParam('type'));
+  var vMin = parseInt($.urlParam('vmin'));
+  var vMax = parseInt($.urlParam('vmax'));
+
+  if(!category || isNaN(category))
+    category = 1;
+
+  if(!type || isNaN(type))
+    type = 3;
+
+  if(!vMin || isNaN(vMin))
+    vMin = 0;
+
+  if(!vMax || isNaN(vMax))
+    vMax = 0;
+
+  function checkItem(cat, typ, price){
+    cat = parseInt(cat);
+    typ = parseInt(typ);
+    price = parseInt(price);
+
+    if((category == cat) && (typ == 3 || type == 3 || type == typ) && (vMin <= price) && (vMax == 0 || vMax >= price))
+      return true;
+    else
+      return false;
+  }
+
+  function getAllItems(){
+    $.ajax({
+      type: "GET" ,
+      url: "xml/items.xml" ,
+      dataType: "xml" ,
+      success: function(xml) {
+        $(xml).find('item').each(function(){
+          var cat = parseInt($(this).attr('cat'));
+          var typ = parseInt($(this).children('gender').text());
+          var price = parseInt($(this).children('price').text());
+
+          var itmAprve = checkItem(cat, typ, price);
+          if(itmAprve){
+            var html =       
+            '<div class="container item-container">'+
+              '<a href="product.html?id='+$(this).attr('id')+'">'+
+                '<img src="images/items/item_'+$(this).attr('id')+'.jpg" class="item-img">'+
+              '</a>'+
+              '<h5>'+$(this).children('brand').text()+' <span class="sub-head">'+$(this).children('model').text()+'</span></h5>'+
+              '<p> Rs.'+n2comm(price)+'</p>'+
+              '<button class="button-black button-add2-cart" onclick="addToCart('+$(this).attr('id')+')">ADD TO CART</button>'+
+            '</div>';
+            
+            $("#contents").append(html+'\n');
+          }
+        });         
+      }       
+    });
+  }
+
+  function addToCart(id){
+    $.ajax({
+      type: "GET" ,
+      url: "xml/items.xml" ,
+      dataType: "xml" ,
+      success: function(xml) {
+        var elem = $(xml).find('items item[id="'+id+'"]');
+
+        var price = parseInt($(elem).children('price').text());
+        addCartItem(id, price, 1);
+
+        alert("The item has successfully added to the Cart!");
+      }      
+    });
+  }
+
+  function searchItems(){
+    var urlAdd = "";
+
+    if(category)
+        urlAdd += "cat="+category;
+
+    var gend = $('input[name=iGend]:checked').val();
+    if(gend)
+      urlAdd += "&type="+gend;
+    
+    var iMin = $('input[name=iPriceMin]').val();
+    if(iMin)
+      urlAdd += "&vmin="+iMin;
+
+    var iMax = $('input[name=iPriceMax]').val();
+    if(iMax)
+      urlAdd += "&vmax="+iMax;
+
+    var urlStr = "shop.html?"+urlAdd;
+    window.location.replace(urlStr);
+  }
+
+  function setValuesToElems(){
+    var catNames = ["Frames", "Sunglasses","Accessories"];
+    $("input[name=iGend][value="+type+"]").prop('checked', true);
+
+    if(vMin && vMin != 0)
+      $('input[name=iPriceMin]').val(vMin);
+
+    if(vMax && vMax != 0)
+      $('input[name=iPriceMax]').val(vMax);
+
+    $("#sReset").attr("href", "shop.html?cat="+category);
+    $("#contents-heading").text(catNames[category-1]);
+    $("title").append(" - "+catNames[category-1]);
+    $("#cat"+category).addClass("active");
+  }
+
+  $(document).ready(function() {
+    getAllItems();
+    setValuesToElems();
+  });
+
+  $(document).scroll(function() {
+    var foot = $("#footer").offset().top;
+    var winP = $(window).scrollTop() + $(window).height();
+
+    if(winP >= foot){
+      var setHeight = (winP - foot) + 70;
+      $("#categoryNav").css('height', 'calc(100% - '+setHeight+'px)');
+
+      $("#categoryNav").scrollTop($("#categoryNav")[0].scrollHeight);
+    }
+    else
+      $("#categoryNav").css('height', '100%');
+  });  
+</script>
+</body>
+</html>

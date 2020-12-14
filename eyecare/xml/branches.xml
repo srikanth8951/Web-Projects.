@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<company>
+    <branch id="1">
+        <name>Head Office</name>
+        <address>No. 321, Ujire, Belthangady-74240.</address>
+        <telephone>080 7273410</telephone>
+        <fax>080 7273410</fax>
+    </branch>
+    <branch id="2">
+        <name>Gadag Branch</name>
+        <address>No. 1436, Navanagar, Gajendragad.</address>
+        <telephone>038381 1155899</telephone>
+        <fax>-</fax>
+    </branch>
+    <branch id="3">
+        <name>Ramanagara Branch</name>
+        <address>No. 2148, Gandhinagara, Ramanagara.</address>
+        <telephone>080 549488</telephone>
+        <fax>-</fax>
+    </branch>
+    <branch id="4">
+        <name>Jayanagaa Branch</name>
+        <address>No 189, Jayanagaa, Bengaluru.</address>
+        <telephone>0112 567 787</telephone>
+        <fax>-</fax>
+    </branch>
+    <branch id="5">
+        <name>Rajajinagara Branch</name>
+        <address>1st phase, Rajajinagara, Bengaluru.</address>
+        <telephone>4987547</telephone>
+        <fax>-</fax>
+    </branch>
+</company>
